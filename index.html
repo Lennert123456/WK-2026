@@ -1,0 +1,139 @@
+<script>
+        // --- 1. CONFIGURATIE & LIVE DATA ---
+        const API_KEY = 'JOUW_RAPIDAPI_KEY'; 
+        const USE_DEMO_DATA = true; // Op 'false' zetten voor de echte API-koppeling
+
+        const venues = [
+            { city: 'Mexico-Stad', stadium: 'Estadio Azteca', flag: '🇲🇽', capacity: '87.523' },
+            { city: 'New York/NJ', stadium: 'MetLife Stadium', flag: '🇺🇸', capacity: '82.500' },
+            { city: 'Toronto', stadium: 'BMO Field', flag: '🇨🇦', capacity: '45.500' },
+            { city: 'Dallas', stadium: 'AT&T Stadium', flag: '🇺🇸', capacity: '80.000' },
+            { city: 'Los Angeles', stadium: 'SoFi Stadium', flag: '🇺🇸', capacity: '70.240' },
+            { city: 'Vancouver', stadium: 'BC Place', flag: '🇨🇦', capacity: '54.500' }
+        ];
+
+        const demoMatches = [
+            { home: { name: 'Nederland', flag: '🇳🇱', goals: 2 }, away: { name: 'Brazilië', flag: '🇧🇷', goals: 1 }, stadium: 'MetLife Stadium', status: 'LIVE 82\'', live: true },
+            { home: { name: 'USA', flag: '🇺🇸', goals: 0 }, away: { name: 'Mexico', flag: '🇲🇽', goals: 0 }, stadium: 'Estadio Azteca', status: '21:00', live: false },
+            { home: { name: 'België', flag: '🇧🇪', goals: 3 }, away: { name: 'Marokko', flag: '🇲🇦', goals: 2 }, stadium: 'SoFi Stadium', status: 'AFGELOPEN', live: false }
+        ];
+
+        const teams = [
+            { name: 'Nederland', flag: '🇳🇱' }, { name: 'Brazilië', flag: '🇧🇷' }, { name: 'USA', flag: '🇺🇸' }, 
+            { name: 'Mexico', flag: '🇲🇽' }, { name: 'Canada', flag: '🇨🇦' }, { name: 'België', flag: '🇧🇪' },
+            { name: 'Duitsland', flag: '🇩🇪' }, { name: 'Frankrijk', flag: '🇫🇷' }, { name: 'Argentinië', flag: '🇦🇷' }
+        ];
+
+        // --- 2. RENDER FUNCTIES ---
+
+        function loadMatches() {
+            const container = document.getElementById('matches-tab');
+            container.innerHTML = '<h2 class="section-title">⚽ Wedstrijden</h2>';
+            demoMatches.forEach(m => {
+                const liveStyle = m.live ? 'color: #34C759; animation: pulse 1.5s infinite;' : 'color: rgba(255,255,255,0.4);';
+                container.innerHTML += `
+                    <div class="ios-card" style="margin-bottom:12px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; text-align:center;">
+                            <div style="flex:1;"><span style="font-size:34px;">${m.home.flag}</span><br><small>${m.home.name}</small></div>
+                            <div style="flex:1;">
+                                <div style="font-size:26px; font-weight:900;">${m.home.goals}:${m.away.goals}</div>
+                                <div style="font-size:10px; font-weight:800; ${liveStyle}">${m.status}</div>
+                            </div>
+                            <div style="flex:1;"><span style="font-size:34px;">${m.away.flag}</span><br><small>${m.away.name}</small></div>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function calculateStandings() {
+            const container = document.getElementById('standings-tab');
+            container.innerHTML = '<h2 class="section-title">📊 Standen - Groep A</h2>';
+            
+            const groupA = [
+                { name: 'Nederland', flag: '🇳🇱', g: 1, ptn: 3, ds: '+1' },
+                { name: 'Brazilië', flag: '🇧🇷', g: 1, ptn: 0, ds: '-1' },
+                { name: 'USA', flag: '🇺🇸', g: 0, ptn: 0, ds: '0' },
+                { name: 'Mexico', flag: '🇲🇽', g: 0, ptn: 0, ds: '0' }
+            ].sort((a,b) => b.ptn - a.ptn);
+
+            let html = '<div class="ios-card" style="padding:0; overflow:hidden;"><table style="width:100%; border-collapse:collapse;">';
+            html += '<tr style="opacity:0.5; font-size:12px; border-bottom:0.5px solid rgba(255,255,255,0.1);"><th style="padding:12px; text-align:left;">Pos / Team</th><th style="padding:12px;">G</th><th style="padding:12px;">Ptn</th></tr>';
+            
+            groupA.forEach((t, i) => {
+                const rowBorder = i < 2 ? 'border-left: 4px solid #34C759;' : 'border-left: 4px solid transparent;';
+                html += `
+                    <tr style="border-bottom:0.5px solid rgba(255,255,255,0.05); ${rowBorder}">
+                        <td style="padding:12px; font-weight:600;">${i+1}. ${t.flag} ${t.name}</td>
+                        <td style="padding:12px; text-align:center; opacity:0.6;">${t.g}</td>
+                        <td style="padding:12px; text-align:center; font-weight:800; color:#0A7AFF;">${t.ptn}</td>
+                    </tr>`;
+            });
+            container.innerHTML += html + '</table></div><p style="padding:10px; font-size:12px; opacity:0.5;">🟢 Top 2 kwalificeert zich voor de volgende ronde.</p>';
+        }
+
+        function renderVenues() {
+            const container = document.getElementById('venues-list');
+            container.innerHTML = '';
+            venues.forEach(v => {
+                container.innerHTML += `<div class="venue-card"><div class="venue-header"><div class="venue-info"><span class="venue-flag">${v.flag}</span><div><div class="venue-city">${v.city}</div><div class="venue-stadium">${v.stadium}</div></div></div><div class="venue-capacity"><div class="capacity-label">Capaciteit</div><div class="capacity-number">${v.capacity}</div></div></div></div>`;
+            });
+        }
+
+        function renderTeams() {
+            const container = document.getElementById('teams-list');
+            container.innerHTML = '';
+            teams.forEach(t => {
+                container.innerHTML += `<div class="team-card"><div class="team-check">✓</div><div><span class="team-flag">${t.flag}</span><div style="font-weight:700;">${t.name}</div></div></div>`;
+            });
+        }
+
+        // --- 3. NAVIGATIE & CORE ---
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Highlight de juiste knop
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => {
+                if(btn.innerText.toLowerCase().includes(tabName)) btn.classList.add('active');
+            });
+
+            // Specifieke render acties
+            if(tabName === 'matches') loadMatches();
+            if(tabName === 'standings') calculateStandings();
+            if(tabName === 'venues') renderVenues();
+            if(tabName === 'teams') renderTeams();
+        }
+
+        function updateCountdown() {
+            const diff = new Date('2026-06-11T00:00:00') - new Date();
+            if (diff > 0) {
+                document.getElementById('days').textContent = Math.floor(diff / 86400000);
+                document.getElementById('hours').textContent = Math.floor((diff / 3600000) % 24);
+                document.getElementById('minutes').textContent = Math.floor((diff / 60000) % 60);
+                document.getElementById('seconds').textContent = Math.floor((diff / 1000) % 60);
+            }
+        }
+
+        window.onload = () => {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('status-time').textContent = now.getHours() + ":" + String(now.getMinutes()).padStart(2, '0');
+            }, 1000);
+            renderVenues(); // Initiale render
+            renderTeams();
+            
+            const style = document.createElement('style');
+            style.innerHTML = `@keyframes pulse { 0%, 100% { opacity:1; } 50% { opacity:0.3; } }`;
+            document.head.appendChild(style);
+        };
+
+        function closeInstallBanner() { document.getElementById('install-banner').style.display = 'none'; }
+    </script>
+</body>
+</html>
