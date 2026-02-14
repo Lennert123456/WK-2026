@@ -3,90 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WK 2026 Live</title>
+    <title>FIFA World Cup 2026</title>
     <style>
-        :root { --ios-bg: #000000; --ios-card: #1C1C1E; --ios-blue: #0A7AFF; --ios-text: #FFFFFF; }
-        body { background-color: var(--ios-bg); color: var(--ios-text); font-family: -apple-system, system-ui, sans-serif; margin: 0; padding-bottom: 80px; }
-        .status-bar { height: 44px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; position: sticky; top: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); z-index: 100; }
-        .container { padding: 16px; }
-        .ios-card { background: var(--ios-card); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
-        .section-title { font-size: 22px; font-weight: 700; margin: 20px 0 12px 0; }
+        :root { --ios-bg: #000000; --ios-card: #1C1C1E; --ios-blue: #0A7AFF; --ios-green: #34C759; }
+        body { background-color: var(--ios-bg); color: white; font-family: -apple-system, system-ui, sans-serif; margin: 0; padding-bottom: 90px; -webkit-user-select: none; }
+        
+        /* Header met Gradient zoals je voorbeeld */
+        .header-gradient {
+            background: linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        .header-flags { font-size: 30px; display: flex; justify-content: center; gap: 10px; align-items: center; margin-bottom: 10px; }
+        .header-title { font-size: 32px; font-weight: 900; margin: 0; letter-spacing: -1px; }
+        .header-subtitle { font-size: 16px; opacity: 0.9; margin-top: 5px; }
+
+        .container { padding: 20px; }
+
+        /* Countdown Blokken */
+        .countdown-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+        .count-box { background: var(--ios-blue); border-radius: 15px; padding: 15px 5px; text-align: center; box-shadow: 0 4px 15px rgba(10, 122, 255, 0.3); }
+        .count-num { font-size: 24px; font-weight: 800; display: block; }
+        .count-label { font-size: 9px; font-weight: 700; opacity: 0.8; }
+
+        /* Standen Tabel */
+        .standings-table { width: 100%; border-collapse: collapse; background: var(--ios-card); border-radius: 15px; overflow: hidden; }
+        .standings-table th { background: rgba(255,255,255,0.05); padding: 12px; font-size: 12px; text-align: left; opacity: 0.5; }
+        .standings-table td { padding: 15px 12px; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
+        .qualify { border-left: 4px solid var(--ios-green); }
+
+        .ios-card { background: var(--ios-card); border-radius: 18px; padding: 20px; margin-bottom: 15px; }
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 65px; background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); border-top: 0.5px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding-top: 10px; }
-        .tab-button { background: none; border: none; color: #8E8E93; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
-        .tab-button.active { color: var(--ios-blue); }
-        .tab-button span { font-size: 24px; margin-bottom: 4px; }
-        .venue-card { background: var(--ios-card); border-radius: 12px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        /* Navigatie onderin */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: rgba(28,28,30,0.9); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.1); }
+        .tab-btn { background: none; border: none; color: #8E8E93; font-size: 10px; display: flex; flex-direction: column; align-items: center; }
+        .tab-btn.active { color: var(--ios-blue); }
+        .tab-btn span { font-size: 26px; margin-bottom: 4px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="status-bar"><span id="status-time">00:00</span><span>5G 🔋</span></div>
-    <div class="container">
-        <div id="home-tab" class="tab-content active">
-            <h1 style="font-size: 34px; margin-bottom: 5px;">WK 2026</h1>
-            <div class="ios-card" style="text-align: center; background: linear-gradient(135deg, #0A7AFF, #5856D6);">
-                <div style="font-size: 12px; text-transform: uppercase;">Aftellen tot de aftrap</div>
-                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 10px;">
-                    <div><div id="days" style="font-size: 28px; font-weight: 800;">0</div><small>DAGEN</small></div>
-                    <div><div id="hours" style="font-size: 28px; font-weight: 800;">0</div><small>UREN</small></div>
+
+    <div id="home-tab" class="tab-content active">
+        <div class="header-gradient">
+            <div class="header-flags">🇺🇸 🏆 🇨🇦 🏆 🇲🇽</div>
+            <h1 class="header-title">FIFA World Cup 2026</h1>
+            <div class="header-subtitle">11 juni – 19 juli 2026</div>
+        </div>
+
+        <div class="container">
+            <h2 style="text-align: center; font-size: 18px;">⏰ Start Over</h2>
+            <div class="countdown-grid">
+                <div class="count-box"><span class="count-num" id="d">--</span><span class="count-label">DAGEN</span></div>
+                <div class="count-box"><span class="count-num" id="h">--</span><span class="count-label">UREN</span></div>
+                <div class="count-box"><span class="count-num" id="m">--</span><span class="count-label">MIN</span></div>
+                <div class="count-box"><span class="count-num" id="s">--</span><span class="count-label">SEC</span></div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px;">
+                <div class="ios-card" style="text-align:center;">
+                    <span style="font-size:30px;">🌍</span>
+                    <h3 style="color:var(--ios-blue); margin: 10px 0 5px 0;">48 Teams</h3>
+                    <small style="opacity:0.6;">Eerste WK met 48 landen</small>
+                </div>
+                <div class="ios-card" style="text-align:center;">
+                    <span style="font-size:30px;">⚽</span>
+                    <h3 style="color:var(--ios-blue); margin: 10px 0 5px 0;">104 Matchen</h3>
+                    <small style="opacity:0.6;">Meer dan ooit tevoren</small>
                 </div>
             </div>
         </div>
-        <div id="matches-tab" class="tab-content"></div>
-        <div id="standings-tab" class="tab-content"></div>
-        <div id="venues-tab" class="tab-content"></div>
     </div>
+
+    <div id="standen-tab" class="tab-content container">
+        <h1 style="font-size: 34px;">Standen</h1>
+        <h2 style="font-size: 20px; opacity: 0.6;">Groep A</h2>
+        <table class="standings-table">
+            <thead>
+                <tr><th>Pos / Team</th><th style="text-align:center;">G</th><th style="text-align:center;">Ptn</th></tr>
+            </thead>
+            <tbody id="group-a-body">
+                </tbody>
+        </table>
+        <p style="font-size: 12px; opacity: 0.5; margin-top: 15px;">🟢 De top 2 kwalificeert zich direct voor de knockout-fase.</p>
+    </div>
+
     <nav class="nav-bar">
-        <button class="tab-button active" onclick="showTab('home')"><span>🏠</span>Home</button>
-        <button class="tab-button" onclick="showTab('matches')"><span>⚽</span>Live</button>
-        <button class="tab-button" onclick="showTab('standings')"><span>📊</span>Standen</button>
-        <button class="tab-button" onclick="showTab('venues')"><span>🏟️</span>Stadions</button>
+        <button class="tab-btn active" onclick="showTab('home', this)"><span>🏆</span>Home</button>
+        <button class="tab-btn" onclick="showTab('standen', this)"><span>📊</span>Standen</button>
+        <button class="tab-btn"><span>⚽</span>Live</button>
+        <button class="tab-btn"><span>🏟️</span>Stadions</button>
     </nav>
 
     <script>
-        const venues = [
-            { city: 'Mexico-Stad', stadium: 'Estadio Azteca', flag: '🇲🇽', cap: '87.523' },
-            { city: 'New York/NJ', stadium: 'MetLife Stadium', flag: '🇺🇸', cap: '82.500' }
-        ];
-
-        function showTab(t) {
-            document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(x => x.classList.remove('active'));
-            document.getElementById(t + '-tab').classList.add('active');
-            event.currentTarget.classList.add('active');
-            if(t === 'matches') renderMatches();
-            if(t === 'standings') renderStandings();
-            if(t === 'venues') renderVenues();
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId + '-tab').classList.add('active');
+            btn.classList.add('active');
         }
 
-        function renderMatches() {
-            const c = document.getElementById('matches-tab');
-            c.innerHTML = '<h2 class="section-title">⚽ Live Scores</h2><div class="ios-card">🇳🇱 Nederland 2 - 1 Brazilië 🇧🇷 <br><small style="color:#34C759; animation:pulse 1.5s infinite">LIVE 82\'</small></div>';
+        function updateTimer() {
+            const start = new Date('2026-06-11T21:00:00');
+            const nu = new Date();
+            const diff = start - nu;
+            
+            document.getElementById('d').innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('h').innerText = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            document.getElementById('m').innerText = Math.floor((diff / 1000 / 60) % 60);
+            document.getElementById('s').innerText = Math.floor((diff / 1000) % 60);
         }
 
-        function renderStandings() {
-            const c = document.getElementById('standings-tab');
-            c.innerHTML = '<h2 class="section-title">📊 Groep A</h2><div class="ios-card">1. 🇳🇱 Nederland - 3pt<br>2. 🇺🇸 USA - 1pt</div>';
+        function renderStanden() {
+            const teams = [
+                { name: 'Nederland', flag: '🇳🇱', g: 1, ptn: 3 },
+                { name: 'USA', flag: '🇺🇸', g: 1, ptn: 1 },
+                { name: 'Mexico', flag: '🇲🇽', g: 0, ptn: 0 },
+                { name: 'Canada', flag: '🇨🇦', g: 0, ptn: 0 }
+            ].sort((a, b) => b.ptn - a.ptn);
+
+            const body = document.getElementById('group-a-body');
+            body.innerHTML = teams.map((t, i) => `
+                <tr class="${i < 2 ? 'qualify' : ''}">
+                    <td style="font-weight:600;">${i+1}. ${t.flag} ${t.name}</td>
+                    <td style="text-align:center; opacity:0.6;">${t.g}</td>
+                    <td style="text-align:center; font-weight:800; color:var(--ios-blue);">${t.ptn}</td>
+                </tr>
+            `).join('');
         }
 
-        function renderVenues() {
-            const c = document.getElementById('venues-tab');
-            c.innerHTML = '<h2 class="section-title">🏟️ Stadions</h2>';
-            venues.forEach(v => { c.innerHTML += `<div class="venue-card"><span>${v.flag} ${v.city}</span><small>${v.cap}</small></div>`; });
-        }
-
-        function updateTime() {
-            const n = new Date();
-            document.getElementById('status-time').textContent = n.getHours() + ":" + String(n.getMinutes()).padStart(2, '0');
-            const d = new Date('2026-06-11') - n;
-            document.getElementById('days').textContent = Math.floor(d / 86400000);
-            document.getElementById('hours').textContent = Math.floor((d / 3600000) % 24);
-        }
-
-        updateTime();
-        setInterval(updateTime, 1000);
+        setInterval(updateTimer, 1000);
+        updateTimer();
+        renderStanden();
     </script>
 </body>
 </html>
