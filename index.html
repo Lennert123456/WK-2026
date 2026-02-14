@@ -12,68 +12,42 @@
         .ios-card { background: var(--ios-card); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 0.5px solid rgba(255,255,255,0.1); }
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
-        
-        /* Stadions Lijst */
         .stadium-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
         .stadium-city { font-weight: bold; font-size: 16px; }
         .stadium-name { font-size: 12px; opacity: 0.6; }
         .stadium-cap { font-size: 12px; color: var(--ios-blue); font-weight: bold; }
-
-        /* Groepen Navigatie */
         .group-nav { display: flex; overflow-x: auto; gap: 8px; padding: 10px 0; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-        .group-pill { background: #2C2C2E; padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.2s; }
+        .group-pill { background: #2C2C2E; padding: 8px 16px; border-radius: 20px; font-size: 14px; white-space: nowrap; }
         .group-pill.active { background: var(--ios-blue); color: white; }
-
-        /* Nav Bar */
         .nav-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.1); }
         .tab-btn { background: none; border: none; color: var(--ios-gray); font-size: 10px; display: flex; flex-direction: column; align-items: center; width: 25%; }
         .tab-btn.active { color: var(--ios-blue); }
         .tab-btn span { font-size: 24px; margin-bottom: 4px; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body>
+<body onload="initApp()">
 
     <div class="header">
         <h1 style="margin:0; font-size: 26px;">FIFA 2026</h1>
-        <div id="countdown" style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Laden...</div>
+        <div id="countdown" style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Aftellen tot de aftrap...</div>
     </div>
 
     <div id="schema-tab" class="tab-content active container">
         <h2 style="font-size: 28px;">Speelschema</h2>
-        <div class="ios-card">
-            <b style="color:var(--ios-blue)">DO 11 JUNI</b>
-            <div style="display:flex; justify-content:space-between; margin-top:5px;"><span>🇲🇽 Mexico - Zuid-Afrika</span><span>21:00</span></div>
-            <div style="display:flex; justify-content:space-between; margin-top:5px;"><span>🇰🇷 Zuid-Korea - TBD</span><span>04:00</span></div>
-        </div>
-        <div class="ios-card">
-            <b style="color:var(--ios-blue)">VR 12 JUNI</b>
-            <div style="display:flex; justify-content:space-between; margin-top:5px;"><span>🇨🇦 Canada - TBD</span><span>21:00</span></div>
-            <div style="display:flex; justify-content:space-between; margin-top:5px;"><span>🇺🇸 USA - Paraguay</span><span>03:00</span></div>
-        </div>
-        <div class="ios-card" style="border-left: 4px solid #facc15;">
-            <b style="color:#facc15">ZO 14 JUNI</b>
-            <div style="display:flex; justify-content:space-between; margin-top:5px;"><span>🇳🇱 Nederland - Japan</span><span>20:00</span></div>
-            <div style="font-size:11px; opacity:0.5;">AT&T Stadium, Dallas</div>
-        </div>
+        <div class="ios-card"><b style="color:var(--ios-blue)">DO 11 JUNI</b><div style="display:flex; justify-content:space-between; margin-top:5px;"><span>🇲🇽 Mexico - Zuid-Afrika</span><span>21:00</span></div></div>
+        <div class="ios-card" style="border-left: 4px solid #facc15;"><b style="color:#facc15">ZO 14 JUNI</b><div style="display:flex; justify-content:space-between; margin-top:5px;"><span>🇳🇱 Nederland - Japan</span><span>20:00</span></div></div>
     </div>
 
     <div id="standen-tab" class="tab-content container">
         <h2 style="font-size: 28px;">Groepen</h2>
-        <div class="group-nav" id="group-nav">
-            </div>
-        <div class="ios-card">
-            <h3 id="group-title">Groep A</h3>
-            <table style="width:100%; font-size: 15px;" id="group-table">
-                </table>
-        </div>
+        <div class="group-nav" id="group-nav"></div>
+        <div class="ios-card"><h3 id="group-title">Groep A</h3><table style="width:100%; font-size: 15px;" id="group-table"></table></div>
     </div>
 
     <div id="stadions-tab" class="tab-content container">
         <h2 style="font-size: 28px;">Stadions</h2>
-        <div class="ios-card" id="stadiums-list">
-            </div>
+        <div class="ios-card" id="stadiums-list"></div>
     </div>
 
     <nav class="nav-bar">
@@ -83,53 +57,36 @@
     </nav>
 
     <script>
-        const data = {
+        const appData = {
             stadions: [
                 { city: "New York/NJ", name: "MetLife Stadium", cap: "82.500" },
                 { city: "Mexico-Stad", name: "Estadio Azteca", cap: "87.523" },
                 { city: "Dallas", name: "AT&T Stadium", cap: "80.000" },
-                { city: "Kansas City", name: "Arrowhead Stadium", cap: "76.416" },
-                { city: "Houston", name: "NRG Stadium", cap: "72.220" },
-                { city: "Atlanta", name: "Mercedes-Benz Stadium", cap: "71.000" },
                 { city: "Los Angeles", name: "SoFi Stadium", cap: "70.240" },
-                { city: "Philadelphia", name: "Lincoln Financial Field", cap: "69.796" },
-                { city: "Seattle", name: "Lumen Field", cap: "69.000" },
-                { city: "San Francisco", name: "Levi's Stadium", cap: "68.500" },
-                { city: "Boston", name: "Gillette Stadium", cap: "65.878" },
-                { city: "Miami", name: "Hard Rock Stadium", cap: "64.767" },
-                { city: "Vancouver", name: "BC Place", cap: "54.500" },
-                { city: "Monterrey", name: "Estadio BBVA", cap: "53.500" },
-                { city: "Guadalajara", name: "Estadio Akron", cap: "48.071" },
                 { city: "Toronto", name: "BMO Field", cap: "45.000" }
             ],
             groepen: {
                 A: ["🇲🇽 Mexico", "🇿🇦 Zuid-Afrika", "🇰🇷 Zuid-Korea", "🇨🇿 Tsjechië"],
                 B: ["🇨🇦 Canada", "🇲🇦 Marokko", "🇨🇴 Colombia", "🇫🇯 Fiji"],
-                C: ["🇺🇸 USA", "🇵🇾 Paraguay", "🇩🇰 Denemarken", "🇹🇳 Tunesië"],
-                D: ["🇳🇱 Nederland", "🇯🇵 Japan", "🇩🇿 Algerije", "🇪🇨 Ecuador"],
-                E: ["🇧🇪 België", "🇪🇬 Egypte", "🇦🇺 Australië", "🇯🇲 Jamaica"],
-                F: ["🇩🇪 Duitsland", "🇭🇷 Kroatië", "🇨🇮 Ivoorkust", "🇺z Oezbekistan"],
-                G: ["🇫🇷 Frankrijk", "🇦🇷 Argentinië", "🇸🇦 S. Arabië", "🇳🇿 Nw-Zeeland"],
-                H: ["🇪🇸 Spanje", "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Engeland", "🇺🇾 Uruguay", "🇶🇦 Qatar"],
-                I: ["🇵🇹 Portugal", "🇮🇹 Italië", "🇳🇬 Nigeria", "🇵🇦 Panama"],
-                J: ["🇧🇷 Brazilië", "🇨🇭 Zwitserland", "🇬🇭 Ghana", "🇮🇶 Irak"],
-                K: ["🇦🇹 Oostenrijk", "🇵🇪 Peru", "🇸🇳 Senegal", "🇻🇳 Vietnam"],
-                L: ["🇸🇪 Zweden", "🇷🇸 Servië", "🇨🇲 Kameroen", "🇯🇴 Jordanië"]
+                D: ["🇳🇱 Nederland", "🇯🇵 Japan", "🇩🇿 Algerije", "🇪🇨 Ecuador"]
             }
         };
+
+        function initApp() {
+            renderGroups();
+            renderStadions();
+            updateCountdown();
+        }
 
         function showTab(id, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(id + '-tab').classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            if(id === 'standen') renderGroups();
-            if(id === 'stadions') renderStadions();
         }
 
         function renderStadions() {
-            const list = document.getElementById('stadiums-list');
-            list.innerHTML = data.stadions.map(s => `
+            document.getElementById('stadiums-list').innerHTML = appData.stadions.map(s => `
                 <div class="stadium-row">
                     <div><div class="stadium-city">${s.city}</div><div class="stadium-name">${s.name}</div></div>
                     <div class="stadium-cap">${s.cap}</div>
@@ -139,14 +96,9 @@
 
         function renderGroups() {
             const nav = document.getElementById('group-nav');
-            if(nav.innerHTML !== "") return;
-            Object.keys(data.groepen).forEach((g, i) => {
-                const pill = document.createElement('div');
-                pill.className = `group-pill ${i===0?'active':''}`;
-                pill.innerText = `Gr. ${g}`;
-                pill.onclick = () => loadGroup(g, pill);
-                nav.appendChild(pill);
-            });
+            nav.innerHTML = Object.keys(appData.groepen).map(g => 
+                `<div class="group-pill" onclick="loadGroup('${g}', this)">Gr. ${g}</div>`
+            ).join('');
             loadGroup('A', nav.firstChild);
         }
 
@@ -154,12 +106,8 @@
             document.querySelectorAll('.group-pill').forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
             document.getElementById('group-title').innerText = `Groep ${g}`;
-            const table = document.getElementById('group-table');
-            table.innerHTML = data.groepen[g].map((t, i) => `
-                <tr style="border-bottom:0.5px solid rgba(255,255,255,0.05)">
-                    <td style="padding:12px 0">${i+1}. ${t}</td>
-                    <td style="text-align:right; opacity:0.6">0 pt</td>
-                </tr>
+            document.getElementById('group-table').innerHTML = appData.groepen[g].map((t, i) => `
+                <tr style="border-bottom:0.5px solid rgba(255,255,255,0.05)"><td style="padding:12px 0">${i+1}. ${t}</td><td style="text-align:right; opacity:0.6">0 pt</td></tr>
             `).join('');
         }
 
@@ -167,7 +115,6 @@
             const d = Math.floor((new Date('2026-06-11T21:00:00') - new Date()) / 86400000);
             document.getElementById('countdown').innerText = `Nog ${d} dagen tot de aftrap!`;
         }
-        updateCountdown();
     </script>
 </body>
 </html>
