@@ -3,145 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIFA World Cup 2026 Pro</title>
+    <title>WK 2026 Pro</title>
     <style>
         :root { --ios-bg: #000000; --ios-card: #1C1C1E; --ios-blue: #0A7AFF; --ios-gray: #8E8E93; --ios-green: #34C759; }
-        body { background-color: var(--ios-bg); color: white; font-family: -apple-system, system-ui, sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
-        
-        /* Header */
-        .header-gradient { background: linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%); padding: 30px 20px; text-align: center; border-bottom-left-radius: 25px; border-bottom-right-radius: 25px; }
-        
+        body { background-color: var(--ios-bg); color: white; font-family: -apple-system, system-ui, sans-serif; margin: 0; padding-bottom: 100px; }
+        .header { background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); padding: 30px 20px; text-align: center; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .container { padding: 15px; }
-        .ios-card { background: var(--ios-card); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 0.5px solid rgba(255,255,255,0.05); }
-
-        /* Tabs Navigatie */
+        .ios-card { background: var(--ios-card); border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 0.5px solid rgba(255,255,255,0.1); }
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        
+        /* Speelschema Styles */
+        .match-day { color: var(--ios-blue); font-size: 13px; font-weight: bold; margin-bottom: 8px; display: block; text-transform: uppercase; }
+        .match-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+        .match-info { font-size: 11px; opacity: 0.5; margin-bottom: 10px; border-bottom: 0.5px solid rgba(255,255,255,0.1); padding-bottom: 5px; }
 
-        /* Knock-out Bracket */
-        .bracket-container { display: flex; overflow-x: auto; gap: 20px; padding: 10px 0; scrollbar-width: none; }
-        .bracket-column { min-width: 200px; }
-        .match-box { background: #2C2C2E; border-radius: 10px; padding: 10px; margin-bottom: 10px; font-size: 12px; border-left: 3px solid var(--ios-blue); }
-        .match-time { color: var(--ios-gray); font-size: 10px; margin-bottom: 5px; display: block; }
-        .team-row { display: flex; justify-content: space-between; padding: 2px 0; }
+        /* Groepen Swipe */
+        .group-nav { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .group-pill { background: #2C2C2E; padding: 8px 15px; border-radius: 20px; font-size: 14px; white-space: nowrap; }
+        .group-pill.active { background: var(--ios-blue); }
 
-        /* Bottom Nav */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: rgba(28,28,30,0.9); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.1); z-index: 1000; }
-        .tab-btn { background: none; border: none; color: var(--ios-gray); font-size: 10px; display: flex; flex-direction: column; align-items: center; width: 20%; }
+        /* Nav Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: rgba(28,28,30,0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding-top: 10px; border-top: 0.5px solid rgba(255,255,255,0.1); }
+        .tab-btn { background: none; border: none; color: var(--ios-gray); font-size: 10px; display: flex; flex-direction: column; align-items: center; width: 25%; }
         .tab-btn.active { color: var(--ios-blue); }
-        .tab-btn span { font-size: 22px; margin-bottom: 4px; }
+        .tab-btn span { font-size: 24px; margin-bottom: 4px; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="home-tab" class="tab-content active">
-        <div class="header-gradient">
-            <h1 style="margin:0; font-size: 28px;">FIFA 2026</h1>
-            <p style="margin:5px 0 0 0; opacity:0.8;">United - One World</p>
-        </div>
-        <div class="container">
-            <div class="ios-card">
-                <h3>📢 Laatste Nieuws</h3>
-                <p style="font-size:14px;">Finale locatie bevestigd: <strong>MetLife Stadium, New York</strong> op 19 juli 2026.</p>
-            </div>
-            <div id="countdown" class="ios-card" style="text-align:center; background:rgba(10,122,255,0.1);">
-                <span id="timer" style="font-size:20px; font-weight:800; color:var(--ios-blue);">--d --u --m</span>
-                <div style="font-size:10px; opacity:0.6;">TOT OPENINGSMATCH</div>
-            </div>
-        </div>
+    <div class="header">
+        <h1 style="margin:0; font-size: 26px;">FIFA World Cup 2026</h1>
+        <div id="countdown" style="font-size: 14px; opacity: 0.9; margin-top: 5px;">Laden...</div>
     </div>
 
-    <div id="schema-tab" class="tab-content container">
-        <h1 style="font-size: 30px; margin-bottom: 10px;">Speelschema</h1>
+    <div id="schema-tab" class="tab-content active container">
+        <h2 style="font-size: 28px;">Speelschema</h2>
+        
         <div class="ios-card">
-            <strong style="color:var(--ios-blue);">DO 11 JUNI - OPENING</strong><br>
-            <div class="team-row"><span>🇲🇽 Mexico - TBD</span><span>21:00</span></div>
-            <small style="opacity:0.5;">Estadio Azteca, Mexico-Stad</small>
+            <span class="match-day">Do 11 juni (Openingsmatch)</span>
+            <div class="match-row"><span>🇲🇽 Mexico - Zuid-Afrika</span><strong>21:00</strong></div>
+            <div class="match-info">Estadio Azteca, Mexico-Stad</div>
+            <div class="match-row"><span>🇰🇷 Zuid-Korea - TBD</span><strong>04:00</strong></div>
+            <div class="match-info">Estadio Akron, Guadalajara</div>
         </div>
+
         <div class="ios-card">
-            <strong style="color:var(--ios-blue);">VR 12 JUNI</strong><br>
-            <div class="team-row"><span>🇨🇦 Canada - TBD</span><span>20:00</span></div>
-            <small style="opacity:0.5;">BMO Field, Toronto</small>
-            <div class="team-row" style="margin-top:10px;"><span>🇺🇸 USA - TBD</span><span>22:00</span></div>
-            <small style="opacity:0.5;">SoFi Stadium, Los Angeles</small>
+            <span class="match-day">Vr 12 juni</span>
+            <div class="match-row"><span>🇨🇦 Canada - TBD</span><strong>21:00</strong></div>
+            <div class="match-info">BMO Field, Toronto</div>
+            <div class="match-row"><span>🇺🇸 USA - Paraguay</span><strong>03:00</strong></div>
+            <div class="match-info">SoFi Stadium, Los Angeles</div>
+        </div>
+
+        <div class="ios-card" style="border-left: 4px solid #facc15;">
+            <span class="match-day">Zo 14 juni (Oranje Debuut)</span>
+            <div class="match-row"><span>🇳🇱 Nederland - Japan</span><strong>20:00</strong></div>
+            <div class="match-info">AT&T Stadium, Dallas</div>
+            <div class="match-row"><span>🇩🇪 Duitsland - Curaçao</span><strong>17:00</strong></div>
+            <div class="match-info">NRG Stadium, Houston</div>
+        </div>
+
+        <div class="ios-card">
+            <span class="match-day">Ma 15 juni</span>
+            <div class="match-row"><span>🇧🇪 België - Egypte</span><strong>21:00</strong></div>
+            <div class="match-info">Lumen Field, Seattle</div>
         </div>
     </div>
 
     <div id="knockout-tab" class="tab-content container">
-        <h1 style="font-size: 30px; margin-bottom: 10px;">Knock-outs</h1>
-        <div class="bracket-container">
-            <div class="bracket-column">
-                <h4 style="color:var(--ios-gray);">1/16 Finale</h4>
-                <div class="match-box"><span class="match-time">28-06 | Los Angeles</span><div class="team-row">Winnaar A</div><div class="team-row">3e Gr. C/D/E</div></div>
-                <div class="match-box"><span class="match-time">29-06 | Boston</span><div class="team-row">Nr 2 Groep A</div><div class="team-row">Nr 2 Groep B</div></div>
-            </div>
-            <div class="bracket-column">
-                <h4 style="color:var(--ios-gray);">Achtste Finale</h4>
-                <div class="match-box"><span class="match-time">04-07 | Houston</span><div class="team-row">N.t.b.</div><div class="team-row">N.t.b.</div></div>
-                <div class="match-box"><span class="match-time">05-07 | New York</span><div class="team-row">N.t.b.</div><div class="team-row">N.t.b.</div></div>
-            </div>
-            <div class="bracket-column">
-                <h4 style="color:var(--ios-gray);">Kwartfinale</h4>
-                <div class="match-box" style="margin-top:40px;"><span class="match-time">09-07 | Boston</span><div class="team-row">N.t.b.</div><div class="team-row">N.t.b.</div></div>
-            </div>
-             <div class="bracket-column">
-                <h4 style="color:var(--ios-green);">FINALE</h4>
-                <div class="match-box" style="margin-top:60px; border-left-color:var(--ios-green);"><span class="match-time">19-07 | New Jersey</span><div class="team-row" style="font-weight:bold;">Finalist 1</div><div class="team-row" style="font-weight:bold;">Finalist 2</div></div>
-            </div>
+        <h2 style="font-size: 28px;">Knock-outs</h2>
+        <div class="ios-card">
+            <span class="match-day">1/16 Finales (28 juni - 3 juli)</span>
+            <p style="font-size: 14px; opacity:0.8;">De eerste keer met 32 teams in de knock-out fase!</p>
+            <div class="match-row"><span>Winnaar Gr. A - 3e Gr. C/D/E</span></div>
+            <div class="match-info">30 juni | Mexico-Stad</div>
+        </div>
+        <div class="ios-card">
+            <span class="match-day">Kwartfinales (9 - 11 juli)</span>
+            <div class="match-info">Locaties: Boston, Dallas, Kansas City, Los Angeles</div>
+        </div>
+        <div class="ios-card" style="background: rgba(52, 199, 89, 0.1); border: 1px solid var(--ios-green);">
+            <span class="match-day" style="color:var(--ios-green);">FINALE - 19 juli</span>
+            <div class="match-row"><strong style="font-size: 18px;">Finalist 1 - Finalist 2</strong></div>
+            <div class="match-info">MetLife Stadium, New York/New Jersey</div>
         </div>
     </div>
 
-    <div id="stadions-tab" class="tab-content container">
-        <h1 style="font-size: 30px;">Stadions</h1>
-        <div id="stadium-list"></div>
+    <div id="standen-tab" class="tab-content container">
+        <h2 style="font-size: 28px;">Groepen</h2>
+        <div class="group-nav">
+            <div class="group-pill active">Gr. A</div><div class="group-pill">Gr. B</div><div class="group-pill">Gr. C</div><div class="group-pill">Gr. D</div><div class="group-pill">Gr. E</div><div class="group-pill">Gr. F</div>
+        </div>
+        <div class="ios-card">
+            <table style="width:100%; font-size: 14px;">
+                <tr style="opacity:0.5;"><td>Team</td><td style="text-align:right;">Ptn</td></tr>
+                <tr><td>🇲🇽 Mexico</td><td style="text-align:right;">0</td></tr>
+                <tr><td>🇿🇦 Zuid-Afrika</td><td style="text-align:right;">0</td></tr>
+                <tr><td>🇰🇷 Zuid-Korea</td><td style="text-align:right;">0</td></tr>
+                <tr><td>🇨🇿 Play-off D</td><td style="text-align:right;">0</td></tr>
+            </table>
+        </div>
     </div>
 
     <nav class="nav-bar">
-        <button class="tab-btn active" onclick="showTab('home', this)"><span>🏠</span>Home</button>
-        <button class="tab-btn" onclick="showTab('schema', this)"><span>🗓️</span>Schema</button>
+        <button class="tab-btn active" onclick="showTab('schema', this)"><span>🗓️</span>Schema</button>
         <button class="tab-btn" onclick="showTab('knockout', this)"><span>🏆</span>Knock-out</button>
+        <button class="tab-btn" onclick="showTab('standen', this)"><span>📊</span>Standen</button>
         <button class="tab-btn" onclick="showTab('stadions', this)"><span>🏟️</span>Stadions</button>
     </nav>
 
     <script>
-        const hostCities = [
-            { city: 'Mexico-Stad', stadium: 'Estadio Azteca', cap: '87.523', country: '🇲🇽' },
-            { city: 'New York/NJ', stadium: 'MetLife Stadium', cap: '82.500', country: '🇺🇸' },
-            { city: 'Dallas', stadium: 'AT&T Stadium', cap: '80.000', country: '🇺🇸' },
-            { city: 'Toronto', stadium: 'BMO Field', cap: '45.000', country: '🇨🇦' },
-            { city: 'Vancouver', stadium: 'BC Place', cap: '54.500', country: '🇨🇦' },
-            { city: 'Los Angeles', stadium: 'SoFi Stadium', cap: '70.240', country: '🇺🇸' }
-        ];
-
-        function showTab(id, btn) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById(id + '-tab').classList.add('active');
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId + '-tab').classList.add('active');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            if(id === 'stadions') renderStadions();
         }
 
-        function renderStadions() {
-            document.getElementById('stadium-list').innerHTML = hostCities.map(s => `
-                <div class="ios-card">
-                    <div style="display:flex; justify-content:space-between;"><strong>${s.country} ${s.city}</strong><span>${s.cap}</span></div>
-                    <small style="opacity:0.6;">${s.stadium}</small>
-                </div>
-            `).join('');
-        }
-
-        function updateTimer() {
+        function countdown() {
             const diff = new Date('2026-06-11T21:00:00') - new Date();
             const d = Math.floor(diff / 86400000);
             const h = Math.floor((diff / 3600000) % 24);
             const m = Math.floor((diff / 60000) % 60);
-            document.getElementById('timer').innerText = `${d}d ${h}u ${m}m`;
+            document.getElementById('countdown').innerHTML = `Nog <b>${d} dagen, ${h} uur</b> tot de aftrap!`;
         }
-
-        setInterval(updateTimer, 60000);
-        updateTimer();
+        setInterval(countdown, 60000); countdown();
     </script>
 </body>
 </html>
