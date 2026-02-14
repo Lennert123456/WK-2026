@@ -221,6 +221,53 @@
         .api-status.success { color: #34C759; }
         .api-status.error { color: #FF453A; }
         
+        .notification-toast {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: rgba(28, 28, 30, 0.98);
+            backdrop-filter: blur(40px);
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            min-width: 300px;
+            max-width: 90%;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .notification-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .notification-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+        }
+        
+        .notification-text {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        
+        .notification-subtitle {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
         .content-area {
             padding-bottom: 100px;
             background: #000;
@@ -359,6 +406,27 @@
             margin: 24px 0 20px;
             letter-spacing: -0.5px;
             padding-left: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .notification-toggle.active {
+            background: #34C759;
         }
         
         .match-card {
@@ -369,6 +437,26 @@
             margin-bottom: 12px;
             border: 0.5px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .match-card.favorite {
+            border: 1.5px solid #FFD700;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
+        }
+        
+        .favorite-star {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 24px;
+            cursor: pointer;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            transition: transform 0.2s;
+        }
+        
+        .favorite-star:active {
+            transform: scale(1.2);
         }
         
         .match-header {
@@ -448,6 +536,55 @@
             color: #0A7AFF;
             padding: 0 20px;
             letter-spacing: 2px;
+        }
+        
+        .match-stats {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 0.5px solid rgba(255, 255, 255, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0A7AFF;
+        }
+        
+        .stat-bar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .stat-bar-fill {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .stat-bar-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #0A7AFF 0%, #34C759 100%);
+            border-radius: 3px;
+            transition: width 0.3s ease;
         }
         
         .venue-card {
@@ -573,10 +710,29 @@
             border: 0.5px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            cursor: pointer;
         }
         
         .team-card:active {
             transform: scale(0.96);
+        }
+        
+        .team-card.favorite {
+            border: 1.5px solid #FFD700;
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.4);
+        }
+        
+        .team-star {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 20px;
+            opacity: 0.3;
+        }
+        
+        .team-card.favorite .team-star {
+            opacity: 1;
         }
         
         .team-check {
@@ -593,11 +749,6 @@
             flex-shrink: 0;
             box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4),
                         inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-        
-        .team-flag {
-            font-size: 28px;
-            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
         }
         
         .tab-bar {
@@ -703,6 +854,17 @@
 </head>
 <body>
     <div id="app">
+        <!-- Notification Toast -->
+        <div id="notification-toast" class="notification-toast">
+            <div class="notification-content">
+                <span class="notification-icon" id="notif-icon">⚽</span>
+                <div class="notification-text">
+                    <div class="notification-title" id="notif-title">Goal!</div>
+                    <div class="notification-subtitle" id="notif-subtitle">Nederland 2 - 1 Japan</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Status Bar -->
         <div class="status-bar">
             <div class="status-time" id="status-time">9:41</div>
@@ -792,7 +954,13 @@
 
             <!-- Matches Tab -->
             <div id="matches-tab" class="tab-content">
-                <h2 class="section-title">⚽ Wedstrijden</h2>
+                <div class="section-title">
+                    <span>⚽ Wedstrijden</span>
+                    <button class="notification-toggle" id="notif-toggle" onclick="toggleNotifications()">
+                        <span>🔔</span>
+                        <span id="notif-text">Aan</span>
+                    </button>
+                </div>
                 <div id="matches-list">
                     <div class="empty-state">
                         <div class="empty-icon">🔄</div>
@@ -825,6 +993,9 @@
                     <h2>✅ Gekwalificeerd</h2>
                     <p>15 van 48 teams (tot nu toe)</p>
                 </div>
+                <p style="text-align: center; font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 16px;">
+                    ⭐ Klik op een team om het als favoriet te markeren
+                </p>
                 <div id="teams-list" class="team-grid"></div>
             </div>
         </div>
@@ -876,21 +1047,21 @@
         ];
 
         const teams = [
-            { name: 'Argentinië', flag: '🇦🇷' },
-            { name: 'Brazilië', flag: '🇧🇷' },
-            { name: 'Canada', flag: '🇨🇦' },
-            { name: 'Duitsland', flag: '🇩🇪' },
-            { name: 'Engeland', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
-            { name: 'Frankrijk', flag: '🇫🇷' },
-            { name: 'Italië', flag: '🇮🇹' },
-            { name: 'Japan', flag: '🇯🇵' },
-            { name: 'Mexico', flag: '🇲🇽' },
-            { name: 'Marokko', flag: '🇲🇦' },
-            { name: 'Nederland', flag: '🇳🇱' },
-            { name: 'Portugal', flag: '🇵🇹' },
-            { name: 'Spanje', flag: '🇪🇸' },
-            { name: 'USA', flag: '🇺🇸' },
-            { name: 'Uruguay', flag: '🇺🇾' },
+            { name: 'Argentinië', flag: '🇦🇷', apiName: 'Argentina' },
+            { name: 'Brazilië', flag: '🇧🇷', apiName: 'Brazil' },
+            { name: 'Canada', flag: '🇨🇦', apiName: 'Canada' },
+            { name: 'Duitsland', flag: '🇩🇪', apiName: 'Germany' },
+            { name: 'Engeland', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', apiName: 'England' },
+            { name: 'Frankrijk', flag: '🇫🇷', apiName: 'France' },
+            { name: 'Italië', flag: '🇮🇹', apiName: 'Italy' },
+            { name: 'Japan', flag: '🇯🇵', apiName: 'Japan' },
+            { name: 'Mexico', flag: '🇲🇽', apiName: 'Mexico' },
+            { name: 'Marokko', flag: '🇲🇦', apiName: 'Morocco' },
+            { name: 'Nederland', flag: '🇳🇱', apiName: 'Netherlands' },
+            { name: 'Portugal', flag: '🇵🇹', apiName: 'Portugal' },
+            { name: 'Spanje', flag: '🇪🇸', apiName: 'Spain' },
+            { name: 'USA', flag: '🇺🇸', apiName: 'United States' },
+            { name: 'Uruguay', flag: '🇺🇾', apiName: 'Uruguay' },
         ];
 
         const countryFlags = {
@@ -905,9 +1076,78 @@
             'Wales': '🏴󠁧󠁢󠁷󠁬󠁳󠁿'
         };
 
-        // API Functions
+        // State management
         let apiKey = localStorage.getItem('apiFootballKey');
+        let notificationsEnabled = localStorage.getItem('notificationsEnabled') === 'true';
+        let favoriteTeams = JSON.parse(localStorage.getItem('favoriteTeams') || '[]');
+        let favoriteMatches = JSON.parse(localStorage.getItem('favoriteMatches') || '[]');
+        let lastScores = {};
         
+        // Notification functions
+        function showNotification(icon, title, subtitle) {
+            const toast = document.getElementById('notification-toast');
+            document.getElementById('notif-icon').textContent = icon;
+            document.getElementById('notif-title').textContent = title;
+            document.getElementById('notif-subtitle').textContent = subtitle;
+            
+            toast.classList.add('show');
+            
+            // Play sound (browser notification sound simulation)
+            const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUKzn77lhGwU7k9ryxnMpBSl+zPLaizsKGGS56+ieSBALTKXh8bllHAU2jdXyvHknBSyCzvHaiDcIF2e+8OCPOQgTY7zv66ZUEQtIpOHxtmIdBTmP1PLJciwEK4DN8diIOQcZaL3v45ZNDA5QrOfvuWEaBTuR1/HEdC0GKn/N8t2PPgkXZrjr6aFODQxPqOPxuWkfBzWP1fPFcisFLIHO8tmJNggXaL3v5ZdPEAxOpN/wtWMbBTmP0vHCcCkFK3/O8dsKMAkVY7Lr66VTEgxKpuDvtGIcBjiP1PLJczAHKYDN8tiIOQYWaL7w45lODg1Qrefur2EbBTuR2fPGdS0GKn7M8dyOPQcVY7nr6J9PDAxOpuLyt2QdBzaO1fLJcysGLIDN8dqJOQYYaL/w5JdPDgxPqODus2IcBjiQ1fPFdC0HKoDN8dqJNwYXZ7/w5ZhPDQxPpuHvtGMcBzmO1vPEciwGKoCN8dmKOQYYaL7w45lODQxQrOfvs2IcBzmP1fPGdS4GKX7M8tyOPggWZLnr6aFPDQxOpODwt2QcBzmP1fPDcy0GKoDN8diLOQYXZ77w5JhODwxPqOHvs2EcBziN1PLFdCwFKYDN8tuJOQcYab/w5JlQDAxOpt/vsmEcBzmP1fPFdCwGKX7M8t2OPQcVZLjq6J9PDQxOpd7vsmIbBzaO1vPGcywGK4DN8tiLOQYYar/w5JlPDQxOpt7usGEbBziO1fPGdCwGKX/M8d2OOwYWZLjq6aBPDgxNpN/vsmEcBzeP1fPFdSsGKX/M8dyOOwYWZLjr6J9PDQ1Ppd/vsmIcBzaP1fLFdSsGKn/M8dyOOwYWZLjr6Z9PDQxOpd/vsmEcBzeN1fPFdSsFKoHM8tyOPAYVZLjr6J9PDQxOpd/vsmEcBzeO1fPFdSsGKn7M8dyOOwYWZLjr6aBPDQxOpd/vsmEcBzeO1fPFdSsGKn/M8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdCsGKoDN8dyOPQYWZLjr6J9PDQxOpd/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKn/M8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr6J9PDQxOpN/vsmEcBzeO1fPFdSsGKoDM8dyOOwYWZLjr');
+            audio.volume = 0.3;
+            audio.play().catch(() => {}); // Ignore errors if autoplay is blocked
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+        
+        function toggleNotifications() {
+            notificationsEnabled = !notificationsEnabled;
+            localStorage.setItem('notificationsEnabled', notificationsEnabled);
+            
+            const toggle = document.getElementById('notif-toggle');
+            const text = document.getElementById('notif-text');
+            
+            if (notificationsEnabled) {
+                toggle.classList.add('active');
+                text.textContent = 'Aan';
+                showNotification('🔔', 'Notificaties Aan', 'Je ontvangt nu goal alerts!');
+            } else {
+                toggle.classList.remove('active');
+                text.textContent = 'Uit';
+                showNotification('🔕', 'Notificaties Uit', 'Goal alerts zijn uitgeschakeld');
+            }
+        }
+        
+        function toggleFavoriteTeam(teamName, apiName) {
+            const index = favoriteTeams.indexOf(apiName);
+            if (index > -1) {
+                favoriteTeams.splice(index, 1);
+            } else {
+                favoriteTeams.push(apiName);
+            }
+            localStorage.setItem('favoriteTeams', JSON.stringify(favoriteTeams));
+            renderTeams();
+        }
+        
+        function toggleFavoriteMatch(matchId) {
+            const index = favoriteMatches.indexOf(matchId);
+            if (index > -1) {
+                favoriteMatches.splice(index, 1);
+            } else {
+                favoriteMatches.push(matchId);
+            }
+            localStorage.setItem('favoriteMatches', JSON.stringify(favoriteMatches));
+        }
+        
+        function isFavoriteMatch(match) {
+            const homeTeam = match.teams.home.name;
+            const awayTeam = match.teams.away.name;
+            return favoriteTeams.includes(homeTeam) || favoriteTeams.includes(awayTeam) || favoriteMatches.includes(match.fixture.id);
+        }
+        
+        // API Functions
         function saveApiKey() {
             const key = document.getElementById('api-key-input').value.trim();
             const statusEl = document.getElementById('api-status');
@@ -947,8 +1187,6 @@
             `;
 
             try {
-                // Gebruik WK 2022 als voorbeeld (league ID 1, season 2022)
-                // Voor WK 2026: verander naar season=2026 wanneer beschikbaar
                 const response = await fetch('https://v3.football.api-sports.io/fixtures?league=1&season=2022', {
                     method: 'GET',
                     headers: {
@@ -975,7 +1213,7 @@
                     return;
                 }
 
-                displayMatches(data.response.slice(0, 20)); // Toon eerste 20 wedstrijden
+                displayMatches(data.response.slice(0, 20));
             } catch (error) {
                 console.error('Error fetching matches:', error);
                 matchesList.innerHTML = `
@@ -1003,6 +1241,25 @@
                 return;
             }
 
+            // Check for goals and send notifications
+            matches.forEach(match => {
+                const matchId = match.fixture.id;
+                const currentScore = `${match.goals.home}-${match.goals.away}`;
+                const lastScore = lastScores[matchId];
+                
+                if (lastScore && lastScore !== currentScore && notificationsEnabled && isFavoriteMatch(match)) {
+                    const homeFlag = countryFlags[match.teams.home.name] || '🏴';
+                    const awayFlag = countryFlags[match.teams.away.name] || '🏴';
+                    showNotification(
+                        '⚽',
+                        'GOAL!',
+                        `${homeFlag} ${match.teams.home.name} ${match.goals.home} - ${match.goals.away} ${match.teams.away.name} ${awayFlag}`
+                    );
+                }
+                
+                lastScores[matchId] = currentScore;
+            });
+
             matchesList.innerHTML = matches.map(match => {
                 const date = new Date(match.fixture.date);
                 const dateStr = date.toLocaleDateString('nl-NL', { 
@@ -1026,9 +1283,18 @@
 
                 const homeFlag = countryFlags[match.teams.home.name] || '🏴';
                 const awayFlag = countryFlags[match.teams.away.name] || '🏴';
+                const isFavorite = isFavoriteMatch(match);
+                const favoriteClass = isFavorite ? 'favorite' : '';
+                
+                // Calculate stats (mock data for demo)
+                const totalShots = (match.goals.home + match.goals.away) * 4 + Math.floor(Math.random() * 10);
+                const possession = match.goals.home > match.goals.away ? 55 : match.goals.away > match.goals.home ? 45 : 50;
 
                 return `
-                    <div class="match-card">
+                    <div class="match-card ${favoriteClass}">
+                        <span class="favorite-star" onclick="toggleFavoriteMatch(${match.fixture.id}); event.stopPropagation();">
+                            ${isFavorite ? '⭐' : '☆'}
+                        </span>
                         <div class="match-header">
                             <div class="match-date">${dateStr}</div>
                             <div class="match-status ${statusClass}">${statusText}</div>
@@ -1046,15 +1312,36 @@
                                 <span class="team-name">${match.teams.away.name}</span>
                             </div>
                         </div>
+                        ${statusClass !== 'scheduled' ? `
+                        <div class="match-stats">
+                            <div class="stat-item">
+                                <div class="stat-label">Balbezit</div>
+                                <div class="stat-value">${possession}%</div>
+                                <div class="stat-bar">
+                                    <div class="stat-bar-fill">
+                                        <div class="stat-bar-progress" style="width: ${possession}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Schoten</div>
+                                <div class="stat-value">${totalShots}</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Hoekschoppen</div>
+                                <div class="stat-value">${Math.floor(totalShots / 3)}</div>
+                            </div>
+                        </div>
+                        ` : ''}
                     </div>
                 `;
             }).join('');
         }
 
         // Render venues
-        const venuesList = document.getElementById('venues-list');
-        venues.forEach(venue => {
-            venuesList.innerHTML += `
+        function renderVenues() {
+            const venuesList = document.getElementById('venues-list');
+            venuesList.innerHTML = venues.map(venue => `
                 <div class="venue-card">
                     <div class="venue-header">
                         <div class="venue-info">
@@ -1070,22 +1357,26 @@
                         </div>
                     </div>
                 </div>
-            `;
-        });
+            `).join('');
+        }
 
         // Render teams
-        const teamsList = document.getElementById('teams-list');
-        teams.forEach(team => {
-            teamsList.innerHTML += `
-                <div class="team-card">
-                    <div class="team-check">✓</div>
-                    <div>
-                        <span class="team-flag">${team.flag}</span>
-                        <div class="team-name">${team.name}</div>
+        function renderTeams() {
+            const teamsList = document.getElementById('teams-list');
+            teamsList.innerHTML = teams.map(team => {
+                const isFavorite = favoriteTeams.includes(team.apiName);
+                return `
+                    <div class="team-card ${isFavorite ? 'favorite' : ''}" onclick="toggleFavoriteTeam('${team.name}', '${team.apiName}')">
+                        <span class="team-star">${isFavorite ? '⭐' : '☆'}</span>
+                        <div class="team-check">✓</div>
+                        <div>
+                            <span class="team-flag">${team.flag}</span>
+                            <div class="team-name">${team.name}</div>
+                        </div>
                     </div>
-                </div>
-            `;
-        });
+                `;
+            }).join('');
+        }
 
         // Countdown Timer
         function updateCountdown() {
@@ -1131,13 +1422,26 @@
             document.getElementById(tabName + '-tab').classList.add('active');
             event.currentTarget.classList.add('active');
             
-            // Load matches when switching to matches tab
             if (tabName === 'matches' && apiKey) {
                 const matchesList = document.getElementById('matches-list');
                 if (matchesList.querySelector('.empty-state')) {
                     fetchLiveMatches();
                 }
             }
+        }
+
+        // Initialize
+        renderVenues();
+        renderTeams();
+        
+        // Set notification toggle state
+        const notifToggle = document.getElementById('notif-toggle');
+        const notifText = document.getElementById('notif-text');
+        if (notificationsEnabled) {
+            notifToggle.classList.add('active');
+            notifText.textContent = 'Aan';
+        } else {
+            notifText.textContent = 'Uit';
         }
 
         // Check if API key exists and hide banner
